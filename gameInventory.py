@@ -1,4 +1,5 @@
 import csv
+import sys
 # Displays the inventory.
 def display_inventory(inventory):
     print('Inventory:')
@@ -11,9 +12,9 @@ def display_inventory(inventory):
 def add_to_inventory(inventory, added_items):
     for i in range(len(added_items)):
         if added_items[i] in inventory.keys():
-            inventory[added_items[i]] += 1
+            inventory[str(added_items[i])] += 1
         else:
-            inventory[added_items[i]] = 1
+            inventory[str(added_items[i])] = 1
     return inventory
 
 
@@ -29,11 +30,10 @@ def print_table(inventory, order=None):
     x = 0
     max_len = 0
     for key in inventory:
-        x = len(key)
+        x = len(str(key))
         if max_len < x:
             max_len = int(x)
     count_list = list(inventory.items())
-    print(count_list)
     t = 0
     if order == 'count,asc':
         for l in range(len(count_list)):
@@ -42,7 +42,6 @@ def print_table(inventory, order=None):
                     t = count_list[i]
                     count_list[i] = count_list[i+1]
                     count_list[i+1] = t
-                    print(count_list)
     elif order == 'count,desc':
         for l in range(len(count_list)):
             for i in range(len(count_list)-1):
@@ -64,11 +63,14 @@ def print_table(inventory, order=None):
 # "import_inventory.csv". The import automatically merges items by name.
 # The file format is plain text with comma separated values (CSV).
 def import_inventory(inventory, filename="import_inventory.csv"):
-    open(filename, 'rb')
-    with open(filename, 'rb') as f:
-        reader = csv.reader(f)
-        for row in reader:
-            print(row)
+    import_list = []
+    with open(filename) as csvfile:
+        readCSV = csv.reader(csvfile, delimiter=',')
+        for row in readCSV:
+            for i in range(len(row)):
+                import_list.append(str(row[i]))
+        add_to_inventory(inventory, import_list)
+    csvfile.closed
 
 
 # Exports the inventory into a .csv file.
@@ -76,15 +78,24 @@ def import_inventory(inventory, filename="import_inventory.csv"):
 # called "export_inventory.csv". The file format is the same plain text 
 # with comma separated values (CSV).
 def export_inventory(inventory, filename="export_inventory.csv"):
-    pass
+    count_list = list(inventory.items())
+    inventory_list = []
+    for i in range(len(count_list)):
+        for t in range(count_list[i][1]):
+            inventory_list.append(str(count_list[i][0]))
+    s = ",".join(inventory_list)
+    with open(filename, 'w') as writecsv:
+        writecsv.write(s)
+    writecsv.close
 
 
 inv = {'rope': 1, 'torch': 6, 'gold coin': 42, 'dagger': 1, 'arrow': 12}
-#display_inventory(inv)
+display_inventory(inv)
 dragon_loot = ['gold coin', 'dagger', 'gold coin', 'gold coin', 'ruby']
 inv = add_to_inventory(inv, dragon_loot)
-#display_inventory(inv)
-#print_table(inv, order='count,asc')
-#print_table(inv, order='count,desc')
-#print_table(inv)
+print_table(inv, order='count,asc')
 import_inventory(inv, filename="test_inventory.csv")
+print_table(inv)
+#export_inventory(inv, filename='test_export2.csv')
+#import_inventory(inv, filename='test_export2.csv')
+#print_table(inv, order='count,desc')
