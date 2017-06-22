@@ -1,7 +1,7 @@
 from gameInventory import *
 
 print('MENU:')
-print('''1 - Display inventory \n2 - Add list to inventory
+print('''1 - Display inventory \n2 - Add list or items to inventory
 3 - Display organized inventory \n4 - Import file to inventory
 5 - Export inventory to file \n6 - Quit''')
 while True:
@@ -10,15 +10,21 @@ while True:
         display_inventory(inv)
     elif first_input == '2':
         loot_list = []
+        delete_list = []
         while True:
-            append_list = input('Add loot items (Press Q or q to quit):')
-            if append_list in ['\t', ' ']:
-                continue
-            if append_list in ['Q', 'q']:
+            append_list = input(
+                '''Add loot items. Start with - to delet an item (Press Q to quit):''')
+            if append_list[0] == '-':
+                remove_list = append_list[1:]
+                delete_list.append(remove_list)
+            elif append_list in ['Q', 'q']:
                 break
-            loot_list.append(append_list)
-            print(loot_list)
+            else:
+                loot_list.append(append_list)
+            print('New items: ', loot_list)
+            print('Lost items: ', delete_list)
         inv = add_to_inventory(inv, loot_list)
+        inv = remove_from_inventory(inv, delete_list)
     elif first_input == '3':
         print('1 - Ascensing \n2 - Descending \n3 - Random order')
         while True:
@@ -36,13 +42,13 @@ while True:
     elif first_input == '4':
         try:
             import_name = input('Add the name of the csv file: ')
-            filename = import_name+'.csv'
+            filename = import_name + '.csv'
             import_inventory(inv, filename)
         except FileNotFoundError:
             print('File not found')
     elif first_input == '5':
         export_name = input('Add a name to the csv file: ')
-        filename = export_name+'.csv'
+        filename = export_name + '.csv'
         export_inventory(inv, filename)
     elif first_input == '6':
         break
