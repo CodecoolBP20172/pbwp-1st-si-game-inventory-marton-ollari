@@ -1,7 +1,7 @@
 from gameInventory import *
 
 print('MENU:')
-print('''1 - Display inventory \n2 - Add list or items to inventory
+print('''1 - Display inventory \n2 - Add or remove items to inventory
 3 - Display organized inventory \n4 - Import file to inventory
 5 - Export inventory to file \n6 - Quit''')
 while True:
@@ -15,8 +15,7 @@ while True:
             append_list = input(
                 '''Add loot items. Start with - to delet an item (Press Q to quit):''')
             if append_list[0] == '-':
-                remove_list = append_list[1:]
-                delete_list.append(remove_list)
+                delete_list.append(append_list[1:])
             elif append_list in ['Q', 'q']:
                 break
             else:
@@ -31,13 +30,13 @@ while True:
             order_input = input('Choose the order of the items (1/2/3)')
             if order_input == '1':
                 order = 'count,asc'
-                break
             elif order_input == '2':
                 order = 'count,desc'
-                break
             elif order_input == '3':
                 order = None
-                break
+            else:
+                continue
+            break
         print_table(inv, order)
     elif first_input == '4':
         try:
@@ -52,6 +51,4 @@ while True:
         export_inventory(inv, filename)
     elif first_input == '6':
         break
-    else:
-        pass
-    print('1-Display, 2-Add, 3-In order, 4-Import, 5-Export, 6-Quit')
+    print('1-Display, 2-Add/Remove, 3-In order, 4-Import, 5-Export, 6-Quit')
