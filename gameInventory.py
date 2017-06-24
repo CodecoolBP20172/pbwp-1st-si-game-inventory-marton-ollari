@@ -1,6 +1,5 @@
 import csv
 import sys
-# Displays the inventory.
 
 
 def display_inventory(inventory):
@@ -8,7 +7,7 @@ def display_inventory(inventory):
     for key, value in inventory.items():
         print(value, key)
     print('Total number of items: ', sum(inventory.values()))
-# Adds to the inventory dictionary a list of items from added_items.
+# Displays the inventory.
 
 
 def add_to_inventory(inventory, added_items):
@@ -20,13 +19,7 @@ def add_to_inventory(inventory, added_items):
             # Create new item in inventory
             inventory[str(added_items[i])] = 1
     return inventory
-# Takes your inventory and displays it in a well-organized table with
-# each column right-justified. The input argument is an order parameter (string)
-# which works as the following:
-# - None (by default) means the table is unordered
-# - "count,desc" means the table is ordered by count (of items in the inventory)
-#   in descending order
-# - "count,asc" means the table is ordered by count in ascending order
+# Adds to the inventory dictionary a list of items from added_items.
 
 
 def print_table(inventory, order=None):
@@ -64,12 +57,15 @@ def print_table(inventory, order=None):
               str(count_list[i][0]).rjust(max_len + 3))
     print('-'.rjust(max_len + 8, '-'))
     print('Total number of items: ', sum(inventory.values()))
+# Takes your inventory and displays it in a well-organized table with
+# each column right-justified. The input argument is an order parameter (string)
+# which works as the following:
+# - None (by default) means the table is unordered
+# - "count,desc" means the table is ordered by count (of items in the inventory)
+#   in descending order
+# - "count,asc" means the table is ordered by count in ascending order
 
 
-# Imports new inventory items from a file
-# The filename comes as an argument, but by default it's
-# "import_inventory.csv". The import automatically merges items by name.
-# The file format is plain text with comma separated values (CSV).
 def import_inventory(inventory, filename="import_inventory.csv"):
     import_list = []
     with open(filename) as csvfile:
@@ -79,12 +75,12 @@ def import_inventory(inventory, filename="import_inventory.csv"):
                 import_list.append(str(row[i]))
         add_to_inventory(inventory, import_list)
     csvfile.closed
+# Imports new inventory items from a file
+# The filename comes as an argument, but by default it's
+# "import_inventory.csv". The import automatically merges items by name.
+# The file format is plain text with comma separated values (CSV).
 
 
-# Exports the inventory into a .csv file.
-# if the filename argument is None it creates and overwrites a file
-# called "export_inventory.csv". The file format is the same plain text
-# with comma separated values (CSV).
 def export_inventory(inventory, filename="export_inventory.csv"):
     count_list = list(inventory.items())
     inventory_list = []
@@ -95,19 +91,27 @@ def export_inventory(inventory, filename="export_inventory.csv"):
     with open(filename, 'w') as writecsv:
         writecsv.write(s)
     writecsv.close
+# Exports the inventory into a .csv file.
+# if the filename argument is None it creates and overwrites a file
+# called "export_inventory.csv". The file format is the same plain text
+# with comma separated values (CSV).
 
 
 def remove_from_inventory(inventory, deleted_items):
     for i in range(len(deleted_items)):
         if deleted_items[i] in inventory.keys():
-            # Add 1 to item in inventory
             inventory[str(deleted_items[i])] -= 1
             if inventory[deleted_items[i]] <= 0:
                 del inventory[deleted_items[i]]
         else:
-            print(deleted_items[i], 'not in the inventory')
+            print(deleted_items[i], 'is not in the inventory')
     return inventory
+# Remove items from inventory
 
 
 inv = {'rope': 1, 'torch': 6, 'gold coin': 42, 'dagger': 1, 'arrow': 12}
-dragon_loot = ['gold coin', 'dagger', 'gold coin', 'gold coin', 'ruby']
+lists = { 
+    'dragon_loot': ['gold coin', 'dagger', 'gold coin', 'gold coin', 'ruby'], 
+    'treasure_chest': ['gold coin', 'dagger', 'gold coin'], 
+    'gnome_gift': ['mushroom', 'poison', 'diamond'],
+}
